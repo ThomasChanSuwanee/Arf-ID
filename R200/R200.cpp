@@ -72,9 +72,15 @@ void R200::loop(){
             // 29: Verification
             // DD: End of frame
             #ifdef DEBUG
-              printHexByte("RSSI", _buffer[6]);
-              printHexWord("PC", _buffer[7], _buffer[8]);
-              printHexBytes("EPC(", &_buffer[9], 12);
+              printHexByte("Command", _buffer[2]);
+              printHexBytes("PL", &_buffer[3], 2);
+              printHexByte("RSSI", _buffer[5]);
+              printHexBytes("PC", &_buffer[6], 2);
+
+              printHexBytes("EPC", &_buffer[8], 12);
+
+              printHexBytes("CRC", &_buffer[20], 2);
+              printHexByte("Checksum", _buffer[22]);
             #endif
             if(memcmp(uid, &_buffer[9], 12) != 0) {
               memcpy(uid, &_buffer[9], 12);
