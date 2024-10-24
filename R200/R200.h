@@ -2,14 +2,15 @@
 #define R200_h
 
 // Generate additional debug information to the serial connection when defined
-// #define DEBUG
+#define DEBUG
 
 #include <stdint.h>
 #include <Arduino.h>
 
 #define RX_BUFFER_LENGTH 64
 
-class R200 {
+class R200 
+{
 
   private:
     HardwareSerial *_serial;
@@ -32,7 +33,10 @@ class R200 {
     bool begin(HardwareSerial *serial = &Serial2, int baud = 115200, uint8_t RxPin = 16, uint8_t TxPin = 17);
     void loop();
     void poll();
+    void writeLabel();
+    void getSelectParameter();
     void setMultiplePollingMode(bool enable=true);
+    void getQueryParameters();
     void dumpModuleInfo();
     bool dataAvailable();
 

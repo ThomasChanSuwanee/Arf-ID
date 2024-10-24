@@ -23,16 +23,24 @@ void setup() {
   rfid.dumpModuleInfo();
 }
 
-void loop() {
+void loop() 
+{
   rfid.loop();
 
   // Periodically re-send the read command
-  if(millis() - lastResetTime > 1000){
+  if(millis() - lastResetTime > 1000)
+  {
     //  digitalWrite(LED_BUILTIN, HIGH);
-    rfid.poll();
+    
     //rfid.dumpUIDToSerial();
-    //rfid.getModuleInfo();
+    //rfid.dumpModuleInfo();
     //  digitalWrite(LED_BUILTIN, LOW);
+
+    //rfid.poll();
+    rfid.getSelectParameter();
+    //rfid.writeLabel();
+    rfid.getQueryParameters();
+
     lastResetTime = millis();
   }
   delay(1000);

@@ -101,6 +101,14 @@ void R200::loop(){
               printHexWord("CRC", _buffer[20], _buffer[21]);
             #endif
             break;
+          case CMD_GetSelectParameter:
+            break;
+          case CMD_WriteLabel:
+            Serial.println("Test Write");
+            break;
+          case CMD_GetQueryParameters:
+            Serial.println("Query Gotten");
+            break;
           case CMD_ExecutionFailure:
             switch(_buffer[R200_ParamPos]){
               case ERR_CommandError:
@@ -276,7 +284,8 @@ void R200::dumpModuleInfo(){
 /**
  * Send single poll command to the reader
  */
-void R200::poll(){
+void R200::poll()
+{
   uint8_t commandFrame[7] = {0};
   commandFrame[0] = R200_FrameHeader;
   commandFrame[1] = FrameType_Command;
@@ -284,6 +293,45 @@ void R200::poll(){
   commandFrame[3] = 0x00; // ParamLen MSB
   commandFrame[4] = 0x00; // ParamLen LSB
   commandFrame[5] = 0x22;  // Checksum
+  commandFrame[6] = R200_FrameEnd;
+  _serial->write(commandFrame, 7);
+}
+
+void R200::writeLabel()
+{
+  uint8_t commandFrame[20] = {0};
+  commandFrame[0] = R200_FrameHeader;
+  commandFrame[1] = FrameType_Command;
+  commandFrame[2] = CMD_WriteLabel;
+  commandFrame[3] = 0x00; // ParamLen MSB
+  commandFrame[4] = 0x0D; // ParamLen LSB
+  commandFrame[5] = 0x00; // AP MSB
+  commandFrame[6] = 0x00;
+  commandFrame[7] = 0x00;
+  commandFrame[8] = 0x01; // AP LSB
+  commandFrame[9] = 0x01; // MemBank // 01 for EPC
+  commandFrame[10] = 0x00; // SA MSB
+  commandFrame[11] = 0x00; // SA LSB
+  commandFrame[12] = 0x00; // DL MSB
+  commandFrame[13] = 0x02; // DL LSB
+  commandFrame[14] = 0x12; // DT MSB
+  commandFrame[15] = 0x34;
+  commandFrame[16] = 0x56;
+  commandFrame[17] = 0x78; // DT LSB
+  commandFrame[18] = 0x6E; // Checksum
+  commandFrame[19] = R200_FrameEnd;
+  _serial->write(commandFrame, 20);
+}
+
+void R200::getSelectParameter()
+{
+  uint8_t commandFrame[7] = {0};
+  commandFrame[0] = R200_FrameHeader;
+  commandFrame[1] = FrameType_Command;
+  commandFrame[2] = CMD_GetSelectParameter;
+  commandFrame[3] = 0x00; // ParamLen MSB
+  commandFrame[4] = 0x00; // ParamLen LSB
+  commandFrame[5] = 0x0B;  // Checksum
   commandFrame[6] = R200_FrameEnd;
   _serial->write(commandFrame, 7);
 }
@@ -314,6 +362,19 @@ void R200::setMultiplePollingMode(bool enable){
     commandFrame[6] = R200_FrameEnd;
     _serial->write(commandFrame, 7);
   }
+}
+
+void R200::getQueryParameters()
+{
+  uint8_t commandFrame[7] = {0};
+  commandFrame[0] = R200_FrameHeader;
+  commandFrame[1] = FrameType_Command;
+  commandFrame[2] = CMD_GetQueryParameters;
+  commandFrame[3] = 0x00; // ParamLen MSB
+  commandFrame[4] = 0x00; // ParamLen LSB
+  commandFrame[5] = 0x0D;  // Checksum
+  commandFrame[6] = R200_FrameEnd;
+  _serial->write(commandFrame, 7);
 }
 
 uint8_t R200::calculateCheckSum(uint8_t *buffer){
