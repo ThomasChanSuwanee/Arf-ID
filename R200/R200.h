@@ -48,6 +48,8 @@ class R200
     void dumpModuleInfo();
     bool dataAvailable();
 
+    void readMemoryBank(); // Testing the command outlined in 6.3
+
     //bool newCardPresent();
     //bool isCardPresent();
     void dumpUIDToSerial();

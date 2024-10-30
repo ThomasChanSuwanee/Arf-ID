@@ -377,6 +377,28 @@ void R200::getQueryParameters()
   _serial->write(commandFrame, 7);
 }
 
+void R200::readMemoryBank()
+{
+  uint8_t commandFrame[16] = {0};
+  commandFrame[0] = R200_FrameHeader;
+  commandFrame[1] = FrameType_Command;
+  commandFrame[2] = CMD_ReadLabel;
+  commandFrame[3] = 0x00;
+  commandFrame[4] = 0x09;
+  commandFrame[5] = 0x00;
+  commandFrame[6] = 0x00;
+  commandFrame[7] = 0xFF;
+  commandFrame[8] = 0xFF;
+  commandFrame[9] = 0x03;
+  commandFrame[10] = 0x00;
+  commandFrame[11] = 0x00;
+  commandFrame[12] = 0x00;
+  commandFrame[13] = 0x02;
+  commandFrame[14] = 0x45;
+  commandFrame[15] = R200_FrameEnd;
+  _serial->write(commandFrame, 16);
+}
+
 uint8_t R200::calculateCheckSum(uint8_t *buffer){
   // Extract how many parameters there are in the buffer
   uint16_t paramLength = buffer[3];
