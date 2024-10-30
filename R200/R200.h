@@ -33,10 +33,18 @@ class R200
     bool begin(HardwareSerial *serial = &Serial2, int baud = 115200, uint8_t RxPin = 16, uint8_t TxPin = 17);
     void loop();
     void poll();
-    void writeLabel();
+    void stopMultiplePolling();
     void getSelectParameter();
-    void setMultiplePollingMode(bool enable=true);
+    void writeLabel();
+    void lockLabelData();
+    void killTag(); // Probably will not be implemented
     void getQueryParameters();
+    void setQueryParameters();
+    void setWorkArea(); // Probably will not be implemented
+    void getWorkArea();
+    void setWorkingChannel();
+    void getWorkingChannel();
+    void setMultiplePollingMode(bool enable=true);
     void dumpModuleInfo();
     bool dataAvailable();
 

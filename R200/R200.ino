@@ -11,8 +11,8 @@
 unsigned long lastResetTime = 0;
 R200 rfid;
 
-void setup() {
-
+void setup() 
+{
   // Intitialise Serial connection (for debugging)
   Serial.begin(115200);
   Serial.println(__FILE__ __DATE__);
