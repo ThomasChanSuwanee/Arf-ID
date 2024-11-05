@@ -2,12 +2,12 @@
 #define R200_h
 
 // Generate additional debug information to the serial connection when defined
-#define DEBUG
+//#define DEBUG
 
 #include <stdint.h>
 #include <Arduino.h>
 
-#define RX_BUFFER_LENGTH 64
+#define RX_BUFFER_LENGTH 640
 
 class R200 
 {

@@ -7,6 +7,8 @@
 
 #include "R200.h"
 
+#define LOOP_INTERVAL 1000
+
 // GLOBALS
 unsigned long lastResetTime = 0;
 R200 rfid;
@@ -21,6 +23,10 @@ void setup()
 
   // Get info
   rfid.dumpModuleInfo();
+
+  // Set multiple polling mode to true
+    rfid.setMultiplePollingMode(0);
+  
 }
 
 void loop() 
@@ -36,10 +42,9 @@ void loop()
     //rfid.dumpModuleInfo();
     //  digitalWrite(LED_BUILTIN, LOW);
 
-    //rfid.poll();
-    rfid.getSelectParameter();
-    //rfid.writeLabel();
-    rfid.getQueryParameters();
+    rfid.poll();
+    
+    //rfid.setMultiplePollingMode(1);
 
     lastResetTime = millis();
   }

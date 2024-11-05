@@ -71,13 +71,14 @@ void R200::loop(){
             // 11 9B:CRC check
             // 29: Verification
             // DD: End of frame
+
+            printHexBytes("EPC", &_buffer[8], 12);
+            
             #ifdef DEBUG
               printHexByte("Command", _buffer[2]);
               printHexBytes("PL", &_buffer[3], 2);
               printHexByte("RSSI", _buffer[5]);
               printHexBytes("PC", &_buffer[6], 2);
-
-              printHexBytes("EPC", &_buffer[8], 12);
 
               printHexBytes("CRC", &_buffer[20], 2);
               printHexByte("Checksum", _buffer[22]);
@@ -100,6 +101,9 @@ void R200::loop(){
             #ifdef DEBUG
               printHexWord("CRC", _buffer[20], _buffer[21]);
             #endif
+            break;
+          case CMD_MultiplePollInstruction:
+            Serial.println("Multiple Poll");
             break;
           case CMD_GetSelectParameter:
             break;
@@ -150,8 +154,27 @@ void R200::loop(){
 
 // Has any data been received from the reader?
 bool R200::dataIsValid(){
-  // Serial.println("Checking Data Valid");
-  // dumpReceiveBufferToSerial();
+   //Serial.println("Checking Data Valid");
+   //dumpReceiveBufferToSerial();
+
+  // Needs to search through the buffer and find the start and end of a frame
+  // Once frame is detected, can then parse through it
+
+  // Frames start with 0xAA and are followed with either 0x01 or 0x02
+  uint8_t frame[64] = {0};
+  for (int byte = 0; byte < RX_BUFFER_LENGTH; byte++)
+  {
+    // Search for first instance of 0xAA
+    if (_buffer[byte] == 0xAA)
+    {
+      /*** ISSUE ***/
+      // issue would be, if the end of frame is 0xDD, there is a possibility that the data being read back will have 0xDD as a byte
+      // therefore, main way to determine length of the frame is to read the data bytes and see if it failed or not, and maybe the parameter byte that would say how long the frame should be
+
+      printf("Found start of frame!\n");
+    }
+  }
+
   uint8_t CRC = calculateCheckSum(_buffer);
 
   // NOTE
@@ -248,8 +271,13 @@ bool R200::receiveData(unsigned long timeOut){
   while ((millis() - startTime) < timeOut) {
     while (_serial->available()) {
       uint8_t b = _serial->read();
+
+      //printf("Bytes: %d\n", bytesReceived);
+      //printf("RX: %d\n", RX_BUFFER_LENGTH);
+
       if(bytesReceived > RX_BUFFER_LENGTH - 1) {
-        Serial.print("Error: Max Buffer Length Exceeded!");
+        Serial.print("Error: Max Buffer Length Exceeded!\n");
+
         flush();
         return false;
       }
@@ -260,9 +288,12 @@ bool R200::receiveData(unsigned long timeOut){
       if (b == R200_FrameEnd) { break; }
     }
   }
-  if (bytesReceived > 1 && _buffer[0] == R200_FrameHeader && _buffer[bytesReceived - 1] == R200_FrameEnd) {
+  if (bytesReceived > 1 )//&& _buffer[0] == R200_FrameHeader && _buffer[bytesReceived - 1] == R200_FrameEnd) 
+  {
+      printf("Data detected!\n");
       return true;
-  } else {
+  } else 
+  {
       return false;
   }
   return false;
