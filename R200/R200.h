@@ -44,6 +44,8 @@ class R200
     void getWorkArea();
     void setWorkingChannel();
     void getWorkingChannel();
+    void setTransmitPower();
+    void getTransmitPower();
     void setMultiplePollingMode(bool enable=true);
     void dumpModuleInfo();
     bool dataAvailable();
