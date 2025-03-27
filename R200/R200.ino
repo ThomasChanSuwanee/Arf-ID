@@ -25,7 +25,9 @@ void setup()
   rfid.dumpModuleInfo();
 
   // Set multiple polling mode to true
-    rfid.setMultiplePollingMode(0);
+  rfid.setMultiplePollingMode(0);
+
+  rfid.setTransmitPower(0x07, 0xD0); // 20 dBm
   
 }
 
@@ -34,7 +36,7 @@ void loop()
   rfid.loop();
 
   // Periodically re-send the read command
-  if(millis() - lastResetTime > 1000)
+  if(millis() - lastResetTime > 100)
   {
     //  digitalWrite(LED_BUILTIN, HIGH);
     
@@ -42,26 +44,11 @@ void loop()
     //rfid.dumpModuleInfo();
     //  digitalWrite(LED_BUILTIN, LOW);
 
-    //rfid.poll();
-    //Serial.println("Starting getTransmit!");
-    rfid.getTransmitPower();
-    delay(100);
-    //Serial.println("\n\n\n\n");
-    //Serial.println("Starting setTransmit!");
-    rfid.setTransmitPower(0x09, 0xC4); // 20 dBm
+    //rfid.getTransmitPower();
 
-/*
-    delay(1000);
-
-    rfid.getTransmitPower();
-    delay(100);
-    rfid.setTransmitPower(0x09, 0xC4); // 25 dBm
-
-    delay(1000);
-*/  
-    //rfid.setMultiplePollingMode(1);
+    rfid.poll();
 
     lastResetTime = millis();
   }
-  delay(1000);
+  delay(25);
 }

@@ -75,6 +75,7 @@ void R200::loop(){
             // DD: End of frame
 
             printHexBytes("EPC", &_buffer[8], 12);
+            printHexBytes("RSSI", &_buffer[5], 1);
             
             #ifdef DEBUG
               printHexByte("Command", _buffer[2]);
