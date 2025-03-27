@@ -37,6 +37,8 @@ void printHexWord(char* name, uint8_t MSB, uint8_t LSB){
   Serial.println(LSB, HEX);
 }
 
+int testCRC;
+
 void R200::loop(){
   // Has any new data been received?      
   if(dataAvailable()){
@@ -111,8 +113,19 @@ void R200::loop(){
             Serial.println("Test Write");
             break;
           case CMD_AcquireTransmitPower:
-            Serial.println("Transmit Power CMD!");
-            printHexBytes("dBm: ", &_buffer[4], 2);
+            Serial.println("Get Transmit Power");
+            printHexBytes("Buffer: ", &_buffer[0], 9);
+            printHexBytes("dBm: ", &_buffer[5], 2);
+            break;
+          case CMD_SetTransmitPower:
+            Serial.println("Set Transmit Power");
+            printHexBytes("Buffer: ", &_buffer[0], 8);
+            printHexBytes("new dBm: ", &_buffer[3], 2);
+
+            testCRC = calculateCheckSum(_buffer);
+            Serial.print("CRC: ");
+            Serial.println(testCRC);
+
             break;
           case CMD_GetQueryParameters:
             Serial.println("Query Gotten");
@@ -412,7 +425,7 @@ void R200::getTransmitPower()
   _serial->write(commandFrame, 7);
 }
 
-void R200::setTransmitPower()
+void R200::setTransmitPower(int newPowerMSB, int newPowerLSB)
 {
   uint8_t commandFrame[9] = {0};
   commandFrame[0] = R200_FrameHeader;
@@ -420,9 +433,11 @@ void R200::setTransmitPower()
   commandFrame[2] = CMD_SetTransmitPower;
   commandFrame[3] = 0x00;
   commandFrame[4] = 0x02;
-  commandFrame[5] = 0x07;
-  commandFrame[6] = 0x00;
-  commandFrame[7] = 0x8F;
+  commandFrame[5] = newPowerMSB;
+  commandFrame[6] = newPowerLSB;
+  commandFrame[7] = calculateCheckSum(commandFrame);
+  Serial.print("CRC: ");
+  Serial.println(commandFrame[7]);
   commandFrame[8] = R200_FrameEnd;
   _serial->write(commandFrame, 9);
 }
@@ -472,9 +487,12 @@ uint8_t R200::calculateCheckSum(uint8_t *buffer){
   // added to four control bytes at the start (type, command, and the 2-byte parameter length)
   // Start from 1 to exclude frame header
   uint16_t check = 0;
+  //Serial.print("Buffer: 0x");
   for(uint16_t i=1; i < paramLength+4+1; i++) {
     check += buffer[i];
+    //Serial.print(buffer[i]);
   }
+  //Serial.println();
   // Now only return LSB
   return (check & 0xff);
 

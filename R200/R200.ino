@@ -43,9 +43,22 @@ void loop()
     //  digitalWrite(LED_BUILTIN, LOW);
 
     //rfid.poll();
+    //Serial.println("Starting getTransmit!");
     rfid.getTransmitPower();
-    Serial.println("Transmit");
-    
+    delay(100);
+    //Serial.println("\n\n\n\n");
+    //Serial.println("Starting setTransmit!");
+    rfid.setTransmitPower(0x09, 0xC4); // 20 dBm
+
+/*
+    delay(1000);
+
+    rfid.getTransmitPower();
+    delay(100);
+    rfid.setTransmitPower(0x09, 0xC4); // 25 dBm
+
+    delay(1000);
+*/  
     //rfid.setMultiplePollingMode(1);
 
     lastResetTime = millis();

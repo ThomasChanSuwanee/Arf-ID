@@ -44,7 +44,7 @@ class R200
     void getWorkArea();
     void setWorkingChannel();
     void getWorkingChannel();
-    void setTransmitPower();
+    void setTransmitPower(int newPowerMSB, int newPowerLSB);
     void getTransmitPower();
     void setMultiplePollingMode(bool enable=true);
     void dumpModuleInfo();
