@@ -413,6 +413,34 @@ void R200::setMultiplePollingMode(bool enable){
   }
 }
 
+void R200::getWorkArea()
+{
+  uint8_t commandFrame[7] = {0};
+  commandFrame[0] = R200_FrameHeader;
+  commandFrame[1] = FrameType_Command;
+  commandFrame[2] = CMD_GetWorkArea;
+  commandFrame[3] = 0x00;
+  commandFrame[4] = 0x00;
+  commandFrame[5] = 0x08;
+  commandFrame[6] = R200_FrameEnd;
+  _serial->write(commandFrame, 7);
+}
+
+void R200::setWorkArea()
+{
+  // Sets work area to US
+  uint8_t commandFrame[8] = {0};
+  commandFrame[0] = R200_FrameHeader;
+  commandFrame[1] = FrameType_Command;
+  commandFrame[2] = CMD_SetWorkArea;
+  commandFrame[3] = 0x00;
+  commandFrame[4] = 0x01;
+  commandFrame[5] = 0x02;
+  commandFrame[6] = calculateCheckSum(commandFrame);
+  commandFrame[7] = R200_FrameEnd;
+  _serial->write(commandFrame, 8);
+}
+
 void R200::getTransmitPower()
 {
   uint8_t commandFrame[7] = {0};
