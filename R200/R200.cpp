@@ -395,6 +395,19 @@ void R200::setMultiplePollingMode(bool enable){
   }
 }
 
+void R200::getTransmitPower()
+{
+  uint8_t commandFrame[7] = {0};
+  commandFrame[0] = R200_FrameHeader;
+  commandFrame[1] = FrameType_Command;
+  commandFrame[2] = CMD_GetTransmitPower;
+  commandFrame[3] = 0x00;
+  commandFrame[4] = 0x00;
+  commandFrame[5] = 0xB7;
+  commandFrame[6] = R200_FrameEnd;
+  _serial->write(commandFrame, 7);
+}
+
 void R200::setTransmitPower()
 {
   uint8_t commandFrame[9] = {0};

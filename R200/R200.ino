@@ -42,7 +42,8 @@ void loop()
     //rfid.dumpModuleInfo();
     //  digitalWrite(LED_BUILTIN, LOW);
 
-    rfid.poll();
+    //rfid.poll();
+    rfid.getTransmitPower();
     
     //rfid.setMultiplePollingMode(1);
 
