@@ -44,6 +44,7 @@ void loop()
 
     //rfid.poll();
     rfid.getTransmitPower();
+    Serial.println("Transmit");
     
     //rfid.setMultiplePollingMode(1);
 

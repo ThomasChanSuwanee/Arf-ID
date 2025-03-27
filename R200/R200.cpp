@@ -110,6 +110,10 @@ void R200::loop(){
           case CMD_WriteLabel:
             Serial.println("Test Write");
             break;
+          case CMD_AcquireTransmitPower:
+            Serial.println("Transmit Power CMD!");
+            printHexBytes("dBm: ", &_buffer[4], 2);
+            break;
           case CMD_GetQueryParameters:
             Serial.println("Query Gotten");
             break;
