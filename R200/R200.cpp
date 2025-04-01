@@ -74,8 +74,17 @@ void R200::loop(){
             // 29: Verification
             // DD: End of frame
 
-            printHexBytes("EPC", &_buffer[8], 12);
-            printHexBytes("RSSI", &_buffer[5], 1);
+            Serial.print("RSSI DEBUG: ");
+            Serial.println(_buffer[5]);
+            if (_buffer[5] < -40)
+            {
+              Serial.println("False tag detected!\n");
+            }
+            else
+            {
+              printHexBytes("RSSI", &_buffer[5], 1);
+              printHexBytes("EPC", &_buffer[8], 12);
+            }
             
             #ifdef DEBUG
               printHexByte("Command", _buffer[2]);
