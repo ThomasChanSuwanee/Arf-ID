@@ -75,8 +75,9 @@ void R200::loop(){
             // DD: End of frame
 
             Serial.print("RSSI DEBUG: ");
-            Serial.println(_buffer[5]);
-            if (_buffer[5] < -40)
+            // printf("%hh\n", _buffer[5]);
+            Serial.println( (signed char) _buffer[5], DEC);
+            if ((signed char)_buffer[5] < -40)
             {
               Serial.println("False tag detected!\n");
             }
@@ -85,6 +86,12 @@ void R200::loop(){
               printHexBytes("RSSI", &_buffer[5], 1);
               printHexBytes("EPC", &_buffer[8], 12);
             }
+
+            /*
+            Serial.println( (signed char) _buffer[5], DEC);
+           printHexBytes("RSSI", &_buffer[5], 1);
+              printHexBytes("EPC", &_buffer[8], 12);
+              */
             
             #ifdef DEBUG
               printHexByte("Command", _buffer[2]);
@@ -198,7 +205,7 @@ bool R200::dataIsValid(){
       // issue would be, if the end of frame is 0xDD, there is a possibility that the data being read back will have 0xDD as a byte
       // therefore, main way to determine length of the frame is to read the data bytes and see if it failed or not, and maybe the parameter byte that would say how long the frame should be
 
-      printf("Found start of frame!\n");
+      //printf("Found start of frame!\n");
     }
   }
 
@@ -317,7 +324,7 @@ bool R200::receiveData(unsigned long timeOut){
   }
   if (bytesReceived > 1 )//&& _buffer[0] == R200_FrameHeader && _buffer[bytesReceived - 1] == R200_FrameEnd) 
   {
-      printf("Data detected!\n");
+      //printf("Data detected!\n");
       return true;
   } else 
   {
