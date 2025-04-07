@@ -14,6 +14,7 @@
 // Otherwise you run into a spacing issue
 
 /*** Test Commit ***/
+/*** 2nd test */
 
 extern std::string outputStringBuffer;
 static bool isRecording = true;
