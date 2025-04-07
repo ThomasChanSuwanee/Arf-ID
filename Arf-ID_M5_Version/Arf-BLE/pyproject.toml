@@ -1,0 +1,20 @@
+[project]
+name = "arf-ble"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "NarcoSheep",email = "rossydang178@gmail.com"}
+]
+readme = "README.md"
+requires-python = "=3.11.9"
+dependencies = [
+    "simplepyble (>=0.9.0,<0.10.0)"
+]
+
+[tool.poetry]
+packages = [{include = "arf_ble", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
